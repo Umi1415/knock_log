@@ -1,33 +1,48 @@
 import socket
+import pyfiglet
+from colorama import init, Fore, Style
+import time
+from datetime import datetime
 
-LISTEN_IP = "0.0.0.0"   # Listen on all interfaces
-LISTEN_PORT = 9999      # Must match the sender's target port
+init()  # Initialize colorama
+
+LISTEN_IP = "0.0.0.0"   # Mendengarkan semua interface
+LISTEN_PORT = 9999      # Port harus sama dengan target port di server
+
+def print_banner():
+    banner = pyfiglet.figlet_format("KnockLog Receiver", font="slant")
+    print(Fore.CYAN + banner + Style.RESET_ALL)
+    print(Fore.YELLOW + "=" * 60 + Style.RESET_ALL)
+    print(Fore.GREEN + " * Knock Sequence Log Monitor Receiver" + Style.RESET_ALL)
+    print(Fore.GREEN + f" * Listening on: {LISTEN_IP}:{LISTEN_PORT}" + Style.RESET_ALL)
+    print(Fore.YELLOW + "=" * 60 + "\n" + Style.RESET_ALL)
 
 def main():
-    print(f"[+] Starting log receiver on {LISTEN_IP}:{LISTEN_PORT}...")
+    print_banner()
+    
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_sock.bind((LISTEN_IP, LISTEN_PORT))
     server_sock.listen(1)
-    print("[+] Waiting for incoming connection...")
+    print(Fore.CYAN + "[*] Waiting for connection..." + Style.RESET_ALL)
 
     conn, addr = server_sock.accept()
-    print(f"[+] Connection established from {addr[0]}:{addr[1]}")
+    print(Fore.GREEN + f"[+] Connection accepted from {addr}" + Style.RESET_ALL)
 
-    try:
-        with conn:
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    print("\n[*] Connection closed by sender.")
-                    break
-                log_line = data.decode(errors="ignore")
-                print(f"[LOG] {log_line}", end='')  # Real-time display of received logs
-    except KeyboardInterrupt:
-        print("\n[!] Interrupted by user.")
-    finally:
-        conn.close()
-        server_sock.close()
-        print("[*] Receiver socket closed.")
+    with conn:
+        while True:
+            data = conn.recv(1024)
+            if not data:
+                break
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            print(Fore.WHITE + f"[{timestamp}] " + Fore.YELLOW + data.decode().strip() + Style.RESET_ALL)
+
+    print(Fore.RED + "\n[-] Connection closed" + Style.RESET_ALL)
+    server_sock.close()
 
 if _name_ == "_main_":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print(Fore.RED + "\n[-] Server stopped by user" + Style.RESET_ALL)
+    except Exception as e:
+        print(Fore.RED + f"\n[-] Error: {str(e)}" + Style.RESET_ALL)
