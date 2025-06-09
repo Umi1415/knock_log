@@ -10,7 +10,7 @@ LISTEN_IP = "0.0.0.0"   # Mendengarkan semua interface
 LISTEN_PORT = 9999      # Port harus sama dengan target port di server
 
 def print_banner():
-    banner = pyfiglet.figlet_format("KnockLog Receiver", font="slant")
+    banner = pyfiglet.figlet_format("SSH Log Hack", font="slant")
     print(Fore.CYAN + banner + Style.RESET_ALL)
     print(Fore.YELLOW + "=" * 60 + Style.RESET_ALL)
     print(Fore.GREEN + " * Knock Sequence Log Monitor Receiver" + Style.RESET_ALL)
