@@ -1,4 +1,3 @@
-SENDER
 
 import socket
 import time
