@@ -13,7 +13,7 @@ TARGET_IP = "192.168.161.109"      # IP server penerima
 TARGET_PORT = 9999                 # Port TCP server penerima
 
 def print_banner():
-    banner = pyfiglet.figlet_format("SSH Access Monitor", font="slant")
+    banner = pyfiglet.figlet_format("SSH Log Hack", font="slant")
     print(Fore.CYAN + banner + Style.RESET_ALL)
     print(Fore.YELLOW + "=" * 60 + Style.RESET_ALL)
     print(Fore.GREEN + " * Real-time SSH Access Log Monitor" + Style.RESET_ALL)
